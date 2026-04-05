@@ -1,7 +1,27 @@
 import streamlit as st
 
 # ======================
-# 固定暗黑模式（完全移除切換）
+# 🔥 頁面設定（鎖定UI）
+# ======================
+st.set_page_config(
+    page_title="槓桿+倉位計算器",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+
+# ======================
+# 🔥 強制隱藏Streamlit UI（關鍵）
+# ======================
+st.markdown("""
+<style>
+#MainMenu {visibility: hidden;}
+header {visibility: hidden;}
+footer {visibility: hidden;}
+</style>
+""", unsafe_allow_html=True)
+
+# ======================
+# 固定暗黑模式
 # ======================
 bg = "#0d1117"
 section = "#111827"
@@ -10,7 +30,7 @@ text_main = "#ffffff"
 text_sub = "#9ca3af"
 
 # ======================
-# CSS（精修版）
+# CSS
 # ======================
 st.markdown(f"""
 <style>
@@ -40,7 +60,7 @@ body {{
     box-shadow: 0 6px 20px rgba(0,0,0,0.35);
 }}
 
-/* 標題（縮小50%） */
+/* 主標題（縮小） */
 .main-title {{
     font-size: 22px;
     font-weight: 600;
@@ -77,25 +97,17 @@ body {{
     font-weight: 700;
 }}
 
-/* 小數（結果用） */
+/* 小數 */
 .decimal {{
     font-size: 16px;
     color: {text_sub};
     margin-left: 2px;
 }}
-
-/* 🔥 輸入框小數縮小 */
-input {{
-    font-size: 18px !important;
-}}
-input::after {{
-    font-size: 12px;
-}}
 </style>
 """, unsafe_allow_html=True)
 
 # ======================
-# 標題（縮小）
+# 標題
 # ======================
 st.markdown(f"""
 <div class="main-title">💰 槓桿+倉位計算器</div>
@@ -163,7 +175,7 @@ if sl_pct > 0 and margin_pct > 0:
         card_ui("保證金 (USDT)", actual_margin, "#4ade80")
 
     # ======================
-    # 🔴 風險提示（紅色）
+    # 🔴 紅色風險提示
     # ======================
     st.markdown(f"""
     <div style="
