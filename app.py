@@ -1,7 +1,7 @@
 import streamlit as st
 
 # ======================
-# 固定暗黑模式（無切換）
+# 固定暗黑模式（完全移除切換）
 # ======================
 bg = "#0d1117"
 section = "#111827"
@@ -10,7 +10,7 @@ text_main = "#ffffff"
 text_sub = "#9ca3af"
 
 # ======================
-# CSS
+# CSS（精修版）
 # ======================
 st.markdown(f"""
 <style>
@@ -40,9 +40,25 @@ body {{
     box-shadow: 0 6px 20px rgba(0,0,0,0.35);
 }}
 
-/* 標題 */
+/* 標題（縮小50%） */
+.main-title {{
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+    color: {text_main};
+}}
+
+/* 副標 */
+.sub-title {{
+    text-align: center;
+    color: {text_sub};
+    font-size: 13px;
+    margin-bottom: 25px;
+}}
+
+/* 區塊標題 */
 .title {{
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     margin-bottom: 20px;
     color: {text_main};
@@ -61,25 +77,29 @@ body {{
     font-weight: 700;
 }}
 
-/* 小數 */
+/* 小數（結果用） */
 .decimal {{
-    font-size: 18px;
+    font-size: 16px;
     color: {text_sub};
     margin-left: 2px;
+}}
+
+/* 🔥 輸入框小數縮小 */
+input {{
+    font-size: 18px !important;
+}}
+input::after {{
+    font-size: 12px;
 }}
 </style>
 """, unsafe_allow_html=True)
 
 # ======================
-# 標題（改成錢符號）
+# 標題（縮小）
 # ======================
 st.markdown(f"""
-<h1 style="text-align:center;color:{text_main};">
-💰 槓桿+倉位計算器
-</h1>
-<p style="text-align:center;color:{text_sub};">
-倉位 × 槓桿 × 風險，一眼掌握
-</p>
+<div class="main-title">💰 槓桿+倉位計算器</div>
+<div class="sub-title">倉位 × 槓桿 × 風險，一眼掌握</div>
 """, unsafe_allow_html=True)
 
 # ======================
@@ -91,12 +111,12 @@ st.markdown('<div class="title">⚙️ 條件設定</div>', unsafe_allow_html=Tr
 col1, col2 = st.columns(2)
 
 with col1:
-    balance = st.number_input("合約帳戶本金 (USDT)", value=1000.0)
-    risk_amount = st.number_input("單筆最大可虧損 (USDT)", value=50.0)
+    balance = st.number_input("合約帳戶本金 (USDT)", value=1000.00, format="%.2f")
+    risk_amount = st.number_input("單筆最大可虧損 (USDT)", value=50.00, format="%.2f")
 
 with col2:
-    margin_pct = st.number_input("投入保證金佔本金 (%)", value=10.0)
-    sl_pct = st.number_input("止損距離 (%)", value=5.0)
+    margin_pct = st.number_input("投入保證金佔本金 (%)", value=10.00, format="%.2f")
+    sl_pct = st.number_input("止損距離 (%)", value=5.00, format="%.2f")
 
 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -134,26 +154,27 @@ if sl_pct > 0 and margin_pct > 0:
         """, unsafe_allow_html=True)
 
     with colA:
-        card_ui("開倉價值 (USDT)", position_size, "#22d3ee")   # 藍
+        card_ui("開倉價值 (USDT)", position_size, "#22d3ee")
 
     with colB:
-        card_ui("槓桿倍數 (x)", leverage, "#facc15")          # 黃
+        card_ui("槓桿倍數 (x)", leverage, "#facc15")
 
     with colC:
-        card_ui("保證金 (USDT)", actual_margin, "#4ade80")    # 綠
+        card_ui("保證金 (USDT)", actual_margin, "#4ade80")
 
     # ======================
-    # 補充說明
+    # 🔴 風險提示（紅色）
     # ======================
     st.markdown(f"""
     <div style="
         margin-top:15px;
-        background:{card};
+        background:#2b0000;
         padding:14px;
         border-radius:12px;
-        color:{text_sub};
+        color:#ff4d4f;
+        font-size:14px;
     ">
-    若價格反向 <b>{sl_pct}%</b>，預計虧損 <b>{risk_amount} USDT</b>
+    若價格反向 <b>{sl_pct:.2f}%</b>，預計虧損 <b>{risk_amount:.2f} USDT</b>
     </div>
     """, unsafe_allow_html=True)
 
